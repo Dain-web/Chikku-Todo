@@ -13,27 +13,9 @@
         <div class="input-container">
             <input type="text" id="taskInput" placeholder="Enter new task...">
             <input type="datetime-local" id="taskDateTime">
-            <button onclick="addTask()">+</button>
+            <button id="addTaskBtn">+</button>
         </div>
         <ul id="taskList"></ul>
-        
-        <!-- For tasks in taskList -->
-<li>
-    <span>${taskText} - ${new Date(taskTime).toLocaleString()}</span>
-    <input type="checkbox" onchange="toggleTask(this)">
-    <input type="hidden" value="${taskTime}">
-    <button class="remove-btn" onclick="removeTask(this)">Remove</button>
-</li>
-
-<!-- For tasks in finishedTaskList -->
-<li class="finished">
-    <span>${taskText} - ${new Date(taskTime).toLocaleString()}</span>
-    <input type="checkbox" checked onchange="toggleTask(this)">
-    <input type="hidden" value="${taskTime}">
-    <button class="remove-btn" onclick="removeTask(this)">X</button>
-</li>
-        
-        
         <h2>Finished tasks</h2>
         <ul id="finishedTaskList"></ul>
     </div>
