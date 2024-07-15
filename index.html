@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chikku Todo</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Chikku Todo</h1>
+        <p>Got your to-do list<br>Ready to tackle it!</p>
+        <div class="input-container">
+            <input type="text" id="taskInput" placeholder="Enter new task...">
+            <input type="datetime-local" id="taskDateTime">
+            <button onclick="addTask()">+</button>
+        </div>
+        <ul id="taskList"></ul>
+        <h2>Finished tasks</h2>
+        <ul id="finishedTaskList"></ul>
+    </div>
+    <div id="appAlert" class="alert"></div>
+    <audio id="notificationSound" src="alert.mp3" preload="auto"></audio>
+    <script src="script.js"></script>
+</body>
+</html>
