@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log(`Notification permission: ${permission}`);
         });
     }
+    loadTasks();
 });
 
 function addTask() {
@@ -25,8 +26,9 @@ function addTask() {
     taskInput.value = '';
     taskDateTime.value = '';
 
-    setNotification(taskText, taskTime);
     console.log(`Task added: ${taskText} at ${taskTime}`);
+    setNotification(taskText, taskTime);
+    saveTasks();
 }
 
 function toggleTask(checkbox) {
@@ -38,6 +40,7 @@ function toggleTask(checkbox) {
         li.classList.remove('finished');
         document.getElementById('taskList').appendChild(li);
     }
+    saveTasks();
 }
 
 function setNotification(taskText, taskTime) {
@@ -45,8 +48,9 @@ function setNotification(taskText, taskTime) {
     const now = new Date();
     const timeUntilTask = taskDate - now;
 
+    console.log(`Setting notification for "${taskText}" in ${timeUntilTask} milliseconds.`);
+
     if (timeUntilTask > 0) {
-        console.log(`Notification for "${taskText}" set for ${taskTime}`);
         setTimeout(() => {
             showNotification(taskText);
         }, timeUntilTask);
@@ -61,8 +65,15 @@ function showNotification(taskText) {
             body: `Time to complete your task: ${taskText}`,
             icon: 'icon.png' // Ensure this path is correct or change it to a valid path
         });
+        notification.onclick = () => {
+            window.focus();
+        };
         const audio = document.getElementById('notificationSound');
-        audio.play();
+        audio.play().then(() => {
+            console.log('Notification sound played.');
+        }).catch(error => {
+            console.error('Error playing sound:', error);
+        });
         displayAppAlert(`Time to complete your task: ${taskText}`);
         console.log(`Notification shown for task: ${taskText}`);
     } else {
@@ -74,7 +85,43 @@ function displayAppAlert(message) {
     const alertBox = document.getElementById('appAlert');
     alertBox.textContent = message;
     alertBox.classList.add('show');
+    console.log('Alert displayed:', message);
     setTimeout(() => {
         alertBox.classList.remove('show');
+        console.log('Alert hidden.');
     }, 7000); // Alert will disappear after 7 seconds
+}
+
+function saveTasks() {
+    const tasks = [];
+    document.querySelectorAll('#taskList li').forEach(li => {
+        const span = li.querySelector('span').innerText;
+        const taskTime = li.querySelector('input[type="hidden"]').value;
+        tasks.push({ text: span, time: taskTime, finished: li.classList.contains('finished') });
+    });
+    document.querySelectorAll('#finishedTaskList li').forEach(li => {
+        const span = li.querySelector('span').innerText;
+        const taskTime = li.querySelector('input[type="hidden"]').value;
+        tasks.push({ text: span, time: taskTime, finished: true });
+    });
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+}
+
+function loadTasks() {
+    const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+    const taskList = document.getElementById('taskList');
+    const finishedTaskList = document.getElementById('finishedTaskList');
+    tasks.forEach(task => {
+        const li = document.createElement('li');
+        li.innerHTML = `<span>${task.text}</span>
+                        <input type="checkbox" onchange="toggleTask(this)" ${task.finished ? 'checked' : ''}>
+                        <input type="hidden" value="${task.time}">`;
+        if (task.finished) {
+            li.classList.add('finished');
+            finishedTaskList.appendChild(li);
+        } else {
+            taskList.appendChild(li);
+            setNotification(task.text, task.time);
+        }
+    });
 }
