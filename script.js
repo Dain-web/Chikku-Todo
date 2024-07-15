@@ -53,7 +53,7 @@ function showNotification(taskText) {
     if (Notification.permission === 'granted') {
         const notification = new Notification('Chikku Todo', {
             body: `Time to complete your task: ${taskText}`,
-            icon: 'icon.png'
+            icon: '/icon.png'
         });
         const audio = document.getElementById('notificationSound');
         audio.play();
