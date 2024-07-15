@@ -125,3 +125,12 @@ function loadTasks() {
         }
     });
 }
+
+
+
+function removeTask(button) {
+    const li = button.parentElement;
+    const ul = li.parentElement;
+    ul.removeChild(li);
+    saveTasks();
+            }
