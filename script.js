@@ -1,6 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
     if (Notification.permission !== 'granted') {
-        Notification.requestPermission();
+        Notification.requestPermission().then(permission => {
+            console.log(`Notification permission: ${permission}`);
+        });
     }
 });
 
@@ -24,6 +26,7 @@ function addTask() {
     taskDateTime.value = '';
 
     setNotification(taskText, taskTime);
+    console.log(`Task added: ${taskText} at ${taskTime}`);
 }
 
 function toggleTask(checkbox) {
@@ -43,9 +46,12 @@ function setNotification(taskText, taskTime) {
     const timeUntilTask = taskDate - now;
 
     if (timeUntilTask > 0) {
+        console.log(`Notification for "${taskText}" set for ${taskTime}`);
         setTimeout(() => {
             showNotification(taskText);
         }, timeUntilTask);
+    } else {
+        console.log(`Task time for "${taskText}" is in the past.`);
     }
 }
 
@@ -53,11 +59,14 @@ function showNotification(taskText) {
     if (Notification.permission === 'granted') {
         const notification = new Notification('Chikku Todo', {
             body: `Time to complete your task: ${taskText}`,
-            icon: '/icon.png'
+            icon: 'icon.png' // Ensure this path is correct or change it to a valid path
         });
         const audio = document.getElementById('notificationSound');
         audio.play();
         displayAppAlert(`Time to complete your task: ${taskText}`);
+        console.log(`Notification shown for task: ${taskText}`);
+    } else {
+        console.log('Notification permission not granted.');
     }
 }
 
@@ -67,5 +76,5 @@ function displayAppAlert(message) {
     alertBox.classList.add('show');
     setTimeout(() => {
         alertBox.classList.remove('show');
-    }, 7000); // Alert will disappear after 5 seconds
+    }, 7000); // Alert will disappear after 7 seconds
 }
