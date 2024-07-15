@@ -7,6 +7,8 @@ document.addEventListener('DOMContentLoaded', () => {
     loadTasks();
 });
 
+document.getElementById('addTaskBtn').addEventListener('click', addTask);
+
 function addTask() {
     const taskInput = document.getElementById('taskInput');
     const taskDateTime = document.getElementById('taskDateTime');
@@ -124,13 +126,4 @@ function loadTasks() {
             setNotification(task.text, task.time);
         }
     });
-}
-
-
-
-function removeTask(button) {
-    const li = button.parentElement;
-    const ul = li.parentElement;
-    ul.removeChild(li);
-    saveTasks();
             }
